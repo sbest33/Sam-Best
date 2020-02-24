@@ -1,0 +1,24 @@
+# Week 5 Assignment Documentation
+
+At first I had was having a really hard time understanding what was happening,
+even with the example we were given for two reasons:
+  - At first the use of the variables i and j were really confusing me because I
+  was wondering if they had anything to do with x and y the same way they do in
+  a vectorial sense, but they are just variables related to how many characters
+  to display in a string.
+  - I did not understand the order of operations that happen in a for loop, but
+  I got a better grasp for it here:
+  <https://beginnersbook.com/2014/01/c-for-loop/>.
+
+Once I understood those two things I knew that to complete the task at hand, I
+would have to change one of the variables in the code. At first I tried substituting
+the 0 in the nested _for_ loop for an i, but that gave me the opposite effect of
+what I wanted, because what was happening was that the nested _for_ loop would
+run 10 times, therefore printing "#" 10 times, and then jump to the next line,
+but this time the amount of times it would print "#" would be one time less
+because our variable j would be starting at a higher number.
+
+I then came to the conclusion that I needed to make sure that "j" started at 0
+every time the master _for_ function ran, and then compare our variable "j" to
+the variable "i", so that the amount of "#"'s it would run would keep increasing
+every line.
