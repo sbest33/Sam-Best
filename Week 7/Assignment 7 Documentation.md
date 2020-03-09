@@ -3,12 +3,12 @@
 ## Understanding the problem
 In this week's assignment we were asked to create a chess board with n rows and columns, where the white squares of the board would be represented by a #, and the black squares by a space. So for instance, if *n = 6* the end result would be:
 
- # # #
+[ # # #
 # # #
  # # #
 # # #
  # # #
-# # #
+# # # ]
 
 ## First thoughts
 So my first thought was that I was going to have to find a loop that would run *num* number of times, and then print out either *" #"* or *"# "* *num* number of times, depending if the current number of the row was odd or even. My only issue then was to find a way to add characters to an already existing string. My first thought was to maybe use template literals somehow, but after some research, it seemed the best way to accomplish this was through the use of the *variable += ()* function that adds anything that is inside the parenthesis to the current string at hand (in the case of my program it is used to add characters to the string called *board*). I found this way to add characters to strings on Stack Overflow here: https://stackoverflow.com/questions/32957729/what-is-in-javascript.
