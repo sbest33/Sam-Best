@@ -1,6 +1,5 @@
 let num = Number(prompt("How many rows and columns do you want?"));
 
-//let num = 4;
 let board = "";
 
 for (let i = 0; i < num; i = i + 1) { //Vertically repeats the process 'num' times
