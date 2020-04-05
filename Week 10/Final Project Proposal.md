@@ -28,4 +28,4 @@ I thought it would be a very good and crucial exercise for me to understand how 
 
 I will now do my best to explain how this can be made using only analog components, and why I decided to use a digital micro-controller such as the Arduino to complete the project rather than make it all in Analog form. *(I will be using reference to the images in the page I mentioned in the above paragraph.)*
 
-![Any signal path through three effects](https://github.com/sbest33/Sam-Best/blob/master/Week%2010/fxselex4.gif)
+![Any signal path through three effects](https://github.com/sbest33/Sam-Best/blob/master/Week%2010/fxselex4%20copy.gif)
