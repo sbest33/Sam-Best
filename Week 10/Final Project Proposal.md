@@ -1,6 +1,6 @@
 # Final Project Proposal
 ## What is the Project?
-My project is an Effect Switching System for a Guitar Pedalboard. Basically what this means is that I will build a device that can recall multiple configurations of effect pedal routings, where each configuration will be triggered by its own foot-switch.
+My project is an **Effect Switching System for a Guitar Pedalboard**. Basically what this means is that I will build a device that can recall multiple configurations of effect pedal routings, where each configuration will be triggered by its own foot-switch.
 
 So why would this be useful? Well let's say a guitarist is playing a song that has a Verse with which requires a clean tone with some reverb, chorus, and long delay, but then the Chorus which comes right after it requires a heavy distorted tone, with no reverb, delay or chorus. In this situation, the guitarist needs to turn off three effect pedals, possibly switch pickups and hit the downbeat of the Chorus smoothly and while keeping good time, in the space of one beat. As you can imagine this is very hard to do, and leaves a lot of margin for error. With my device, all the effect switching could be done with one button press.
 
@@ -17,3 +17,6 @@ And here are a few projects similar to mine made by *makers* and *hackers* throu
 * [Arduino Programmable 5 Pedal Switcher](https://www.instructables.com/id/arduino-programable-5-pedal-switcher/)
 * [DIY 4 Loop Switcher \(made with all analog electronics\)](https://www.youtube.com/watch?v=Fd_LKoOA7sE)
 * [DIY 8 Pedal Loop Switcher \(which I used to base my project on\)](https://www.youtube.com/watch?v=NYT-uuoJm2o)
+
+## Where to start?
+At first this seemed like quite an overwhelming project, but after a lot of research I am starting to feel confident that I will be able to pull it off. Thankfully my girlfriend, Rachel, is a product engineer with a lot of experience as a thinker, and has offered to help me if I am to get stuck or hit a dead end. On top of that her brother is an Electric Engineer who has served as a great resource just for me to check if the things I am thinking of making are indeed possible and will, theoretically, work. Thankfully so far I have not hit any kind of dead end, but all the help that I have needed will be mentioned later on. 
