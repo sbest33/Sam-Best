@@ -39,7 +39,7 @@ If you come up with any configuration using any amount of those pedals, by using
 
 ### Two paths through three effects
 So what was demonstrated in the above circuit would allow any combination of pedal routing to be created with 3 pedals, but let's say now we want to have a second configuration of pedals. This is what it would look like.
-![Two signal paths through three effects](https://github.com/sbest33/Sam-Best/blob/master/Week%2010/fxselex4%20copy.gif)
+![Two signal paths through three effects](https://github.com/sbest33/Sam-Best/blob/master/Week%2010/fxselex5%20copy.gif)
 
 Now we have two *"programs"*, each being controlled through a 4PST (Quadruple Pole Single Throw) switch which would, one marked P1 and the other P2. When P1 is closed (turned On), signal can run to all four of the SP4T switches in *"program" 1*, and when P2 is closed, signal can run to all four of the SP4T switches in *"program" 2*. Basically what we have now are two circuits the same as in the first image, running in parallel, each with their own pedal configuration. So let's we could set Program 1, to have the following signal flow: **Guitar In -> FX2 -> FX3 -> FX1 -> Output**; and Program 2 could have this signal flow: **Guitar In -> FX3 -> Output**.
 
@@ -48,3 +48,6 @@ The really nice thing about this model is that you could now just keep adding mo
 2. To change the routing configuration within each *"Program"*, you need to physically open up the device and individually configure each switch in the circuit to the correct switch position.
 
 ## Making a Digital Version of the same System
+So at this point I knew that the analog version would maybe not be flawless enough to be used in a real performance situation (and not to mention it does not require any real programming), so I had to figure out a way to be able to make it digitally. Fortunately in the past, as a young teenager, I had spent some time playing with the Arduino and also learning about Electronics, with the goal of wanting to build some effect pedals (and thankfully I was fortunate enough to eventually actually make some). One of the components remember learning about was the Relay, which is a device that can receive a signal, and through a magnetic transducer (well usually a magnetic transducer, the ones I ended up using were actually controlled through Optical Isolation), a second circuit, usually of much higher current, can be triggered to allow signal to flow through it.  
+
+So these two elements, the Arduino and the Relay, which I had a basic understanding of, were the two fundamental parts in the Effect Switching System that Rick Graham (mentioned earlier) built. Therefore I though it would be best to design my project based on his. 
