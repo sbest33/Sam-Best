@@ -26,4 +26,6 @@ The first resource I used, was a Youtube video build demonstration of a very sim
 ### Understanding the analog version
 I thought it would be a very good and crucial exercise for me to understand how the same kind of project can be done in analog fashion, using only electronic components, so I could then understand and appreciate how it could be recreated with the use of digital components as well. When we had previously conversed about the creation of this project, you pointed me to [this forum](https://www.harmonycentral.com/forums/topic/118660-building-an-effect-switching-system/) which was very useful in understanding the way signal can be routed in a pedalboard through electronic manipulation, especially because on this forum page I found [this page](http://www.geofex.com/article_folders/fxswitchr/fxswitchr.htm) which was crucial for me to understand an analog version of how this could be created.
 
-I will now do my best to explain how this can be made using only analog components, and why I decided to use a digital micro-controller such as the Arduino to complete the project rather than make it all in Analog form. 
+I will now do my best to explain how this can be made using only analog components, and why I decided to use a digital micro-controller such as the Arduino to complete the project rather than make it all in Analog form. *(I will be using reference to the images in the page I mentioned in the above paragraph.)*
+
+![Any signal path through three effects](https://github.com/sbest33/Sam-Best/blob/master/Week%2010/fxselex4.gif)
