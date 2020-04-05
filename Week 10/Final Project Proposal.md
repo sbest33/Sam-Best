@@ -270,4 +270,5 @@ void loop() {
 } // LOOP end﻿
 ```
 
-So now that I have this code which is enough to demo the signal flow and all the *"thinking"* that the Arduino is doing
+So now that I had this code which is enough to demo the signal flow and all the *"thinking"* that the Arduino is doing, I started to make a wiring diagram for the what actual program might look like, using the program [***Fritzing***](https://fritzing.org/home/). This is what my current diagram looks like:
+![First Wiring Diagram](https://github.com/sbest33/Sam-Best/blob/master/Week%2010/First%20Wiring%20Diagram.jpg).
