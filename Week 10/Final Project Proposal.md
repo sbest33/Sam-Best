@@ -268,6 +268,6 @@ void loop() {
   }
 
 } // LOOP end﻿
-```
+```*
 
 So now that I have this code which is enough to demo the signal flow that will happen
