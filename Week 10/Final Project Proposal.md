@@ -23,10 +23,10 @@ At first this seemed like quite an overwhelming project, but after a lot of rese
 
 The first resource I used, was a Youtube video build demonstration of a very similar project that user [Paul Graham](https://www.youtube.com/channel/UCrw0n8YMvLIxB3unvbfISsw) made. I went all over the place afterwards looking for ideas, but I ended up going back to this video to use as a base for my project. He based his project off of an Arduino Mega 2560, which I will talk about more in the future, but after some research this seemed like the best method to be able to control multiple signals and to set up a system that could memorize different banks of effect configurations (I will discuss later on why I came to this conclusion).
 
-### Understanding the analog version
+## Understanding the analog version
 I thought it would be a very good and crucial exercise for me to understand how the same kind of project can be done in analog fashion, using only electronic components, so I could then understand and appreciate how it could be recreated with the use of digital components as well. When we had previously conversed about the creation of this project, you pointed me to [this forum](https://www.harmonycentral.com/forums/topic/118660-building-an-effect-switching-system/) which was very useful in understanding the way signal can be routed in a pedalboard through electronic manipulation, especially because on this forum page I found [this page](http://www.geofex.com/article_folders/fxswitchr/fxswitchr.htm) which was crucial for me to understand an analog version of how this could be created.
 
-#### Any effect path with 3 effects
+### Any effect path with 3 effects
 I will now do my best to explain how this can be made using only analog components, and why I decided to use a digital micro-controller such as the Arduino to complete the project rather than make it all in Analog form. *(I will be using reference to the images in the page I mentioned in the above paragraph.)*
 
 ![Any signal path through three effects](https://github.com/sbest33/Sam-Best/blob/master/Week%2010/fxselex4%20copy.gif)
@@ -37,8 +37,14 @@ Let's say for instance that we would like the signal to follow the following pat
 
 If you come up with any configuration using any amount of those pedals, by using four SP4T (Single Pole Quadruple Throw, more on that [here](https://www.dummies.com/programming/electronics/components/switches-in-electronic-circuits-poles-and-throws/)) switches such as the ones in this circuit, it can be achieved.
 
-#### Two paths through three effects
+### Two paths through three effects
 So what was demonstrated in the above circuit would allow any combination of pedal routing to be created with 3 pedals, but let's say now we want to have a second configuration of pedals. This is what it would look like.
 ![Two signal paths through three effects](https://github.com/sbest33/Sam-Best/blob/master/Week%2010/fxselex4%20copy.gif)
 
 Now we have two *"programs"*, each being controlled through a 4PST (Quadruple Pole Single Throw) switch which would, one marked P1 and the other P2. When P1 is closed (turned On), signal can run to all four of the SP4T switches in *"program" 1*, and when P2 is closed, signal can run to all four of the SP4T switches in *"program" 2*. Basically what we have now are two circuits the same as in the first image, running in parallel, each with their own pedal configuration. So let's we could set Program 1, to have the following signal flow: **Guitar In -> FX2 -> FX3 -> FX1 -> Output**; and Program 2 could have this signal flow: **Guitar In -> FX3 -> Output**.
+
+The really nice thing about this model is that you could now just keep adding more *"programs"*, by repeating another parallel instance of the original circuit. **The problem is that there are two main issues:**
+1. There is nothing that makes the *"Program 2"* turn off when *"Program"* 1 is on or vice versa, so if both of the foot-switches were closed at the same time, there would be some weird signal artifacts, like a possible feedback loop, **and as this will be used for practical performance purposes, this is enough reason to find a different method.**
+2. To change the routing configuration within each *"Program"*, you need to physically open up the device and individually configure each switch in the circuit to the correct switch position.
+
+## Making a Digital Version of the same System
