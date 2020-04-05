@@ -55,7 +55,7 @@ So these two elements, the Arduino and the Relay, which I had a basic understand
 ### Writing/Testing the Code
 So the first thing he did was create a simpler version of his circuit where instead of controlling the current to flow/not flow to each pedal there would be an LED in place of each relay. (In the full build he ends up also using an LED to indicate which *"Program"* is turned On at a give time, and what pedal is turned On within each Program, and also to show what Bank is selected).
 
-This is the code he uses to test the code with LED's (this is an updated version of the code by *Youtube* user *MassaM SDC*, but it only has two Banks of *"programs"* and 6 Effect Pedals):
+This is the code he uses to test the code with LED's (this is an updated version of the code by *Youtube* user *MassaM SDC*, but it only has two Banks of *"programs"* and 6 Effect Pedals, and can be found [here](http://www.mediafire.com/file/uvwpc40d8u60fhd/looper8ch_new.rar)):
 ```cpp
 /*
 
@@ -270,5 +270,30 @@ void loop() {
 } // LOOP end﻿
 ```
 
+To fully understand everything that is going on in this code, and to further my knowledge in Arduino, I have been following these tutorials [here.](https://www.youtube.com/playlist?list=PLGs0VKk2DiYx6CMdOQR_hmJ2NbB4mZQn-)
+
 So now that I had this code which is enough to demo the signal flow and all the *"thinking"* that the Arduino is doing, I started to make a wiring diagram for the what actual program might look like, using the program [***Fritzing***](https://fritzing.org/home/). This is what my current diagram looks like:
-![First Wiring Diagram](https://github.com/sbest33/Sam-Best/blob/master/Week%2010/First%20Wiring%20Diagram.jpg).
+![First Wiring Diagram](https://github.com/sbest33/Sam-Best/blob/master/Week%2010/First%20Wiring%20Diagram.png).
+
+With this diagram, and with the code I have in mind, my project will have 5 Program Buttons (1 of them is for the tuner) and 1 Button to toggle between *"Program"* Banks. It will also have 1 LED per effect pedal (7 not including the Tuner), 1 LED for the Tuner, 4 LEDs for the 4 *"Programs"* (only one will remain lit at a time out of the four), and a LED Display to show which Bank is currently being used. Each Relay will control its own effects by going to an input jack (for my device it is really an Output, but it is an Input for the Pedal that it is going to) and then back in through an output jack (which on my device is really an Input, but it is an Output to the Pedal that it is coming from). If you noticed that the Input and Output jack for each pedal are connected, that is because they are normal-led, so that there is still signal flow even when there is no pedal plugged in one of the Audio jacks (this could also be very good in case on of the pedals comes unplugged during a performance, that an effect might drop out of the signal chain, but audio signal will still be present, which could be very good for saving a performance).
+
+#### External help for Wiring Diagram
+These are some resources that helped me understand how to properly connect all these components to each other and to the Arduino:
+* [For connecting Pushbuttons \(which will act as footswitches\)](https://www.youtube.com/watch?v=VPGRqML_v0w);
+* [For connecting LED's](https://www.youtube.com/watch?v=e1FVSpkw6q4&t=71s);
+* [For connecting the LED display](https://www.youtube.com/watch?v=yWwvUUZ4-Xs);
+* [For connecting Relays](https://www.youtube.com/watch?v=LLFQ8sBWc80);
+* I have a decent experience using 1/4 Audio Jacks so I did not need any kind of external resource to know how to properly add that element to the circuit.
+
+## Which components do I need?
+I have run up and down this list multiple times, so I am pretty positive this is everything I need for this build, but there might be something missing which I will probably one find out once I start building (because that is usually just how it goes, unfortunately). However, here is the list:
+
+1. [Arduino MEGA 2560](https://store.arduino.cc/usa/mega-2560-r3)(the only reason I need this one specifically, is because of the amount of Current I will be driving from the Board as well as the amount of Pins I need. Each Pin of the Arduino can comfortably send 20mA which is enough for the Relays I have);
+2. [8-Channel Relay Module](https://www.sainsmart.com/products/8-channel-5v-relay-module)(I made sure that these Relays were **Active Low**, and that the current they need to be activated be a current that the Arduino can supply, which it is (20mA). These details were ones that Rachel's brother was made sure I checked);
+3. [6 Pushbutton Switches](https://www.mouser.com/ProductDetail/e-switch/fs5700spmt2b2m1qeh/?qs=1mbolxNpo8flOfvtpIEElg%3D%3D&countrycode=US&currencycode=USD)(I checked that these are SPDT switches (even though I only need SPST but that should not be an issue) that are momentary, because once the button does not need to remain down as their signal will be read and interpreted digitally);
+4. [18 Mono \(TS\) Audio Jacks](https://www.mouser.com/ProductDetail/neutrik/nmj4hcd2/?qs=SzdD80gJ2cAr9Xh3wJi7nw%3D%3D&countrycode=US&currencycode=USD)(1 for Input, 1 for Output, and 2 for each Effect Pedal);
+5. [Hammond 1590DF Enclosure](https://www.mouser.com/ProductDetail/hammond/1590df/?qs=QE4fThmkWqsysh4pv9rIBw%3D%3D&countrycode=US&currencycode=USD);
+6. [12 5mm LED's](https://www.adafruit.com/product/299)(These need 20mA to light well, so according to Ohm's Law, they should need 250 Ohm Resistors with the Arduino's 5V Voltage, but I am using 220 Ohm's because that is a more common value for resistors and it is close enough);
+7. [13 250 Ohm Resistors](https://www.adafruit.com/product/2780)(one extra for the 7 Segment LED Display);
+8. [6 2.2K Ohm Pull Down Resistors for the Foot-switches](https://www.adafruit.com/product/2782);
+9. [7 Segment LED Display](https://www.digikey.com/product-detail/en/broadcom-limited/HDSM-431W/516-3013-2-ND/2218995).
