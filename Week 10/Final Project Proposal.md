@@ -26,6 +26,19 @@ The first resource I used, was a Youtube video build demonstration of a very sim
 ### Understanding the analog version
 I thought it would be a very good and crucial exercise for me to understand how the same kind of project can be done in analog fashion, using only electronic components, so I could then understand and appreciate how it could be recreated with the use of digital components as well. When we had previously conversed about the creation of this project, you pointed me to [this forum](https://www.harmonycentral.com/forums/topic/118660-building-an-effect-switching-system/) which was very useful in understanding the way signal can be routed in a pedalboard through electronic manipulation, especially because on this forum page I found [this page](http://www.geofex.com/article_folders/fxswitchr/fxswitchr.htm) which was crucial for me to understand an analog version of how this could be created.
 
+#### Any effect path with 3 effects
 I will now do my best to explain how this can be made using only analog components, and why I decided to use a digital micro-controller such as the Arduino to complete the project rather than make it all in Analog form. *(I will be using reference to the images in the page I mentioned in the above paragraph.)*
 
 ![Any signal path through three effects](https://github.com/sbest33/Sam-Best/blob/master/Week%2010/fxselex4%20copy.gif)
+
+In the above picture, we can see signal coming in, and then multiple combinations of signal routing options before going to the output. Basically we have the option of routing the signal through any possible permutation of signal with 3 pedals (ranging from permutations that involve all three pedals on, to two pedals on, to just one, or to the situation where you would want to bypass all the pedals altogether).
+
+Let's say for instance that we would like the signal to follow the following path: **Guitar In -> FX2 -> FX1 -> Output.** For this to be accomplished, all we would need to do would be to **set the first switch to the second position** (for signal to go to the Input of FX2), **the second switch to the fourth position** (for the signal to go to the main Output after it comes from the Output of FX1), **the third switch would remain on the first position** (to carry the signal into the Input of FX1), and **the fourth switch would not matter** because this pedal configuration would not include FX3.
+
+If you come up with any configuration using any amount of those pedals, by using four SP4T (Single Pole Quadruple Throw, more on that [here](https://www.dummies.com/programming/electronics/components/switches-in-electronic-circuits-poles-and-throws/)) switches such as the ones in this circuit, it can be achieved.
+
+#### Two paths through three effects
+So what was demonstrated in the above circuit would allow any combination of pedal routing to be created with 3 pedals, but let's say now we want to have a second configuration of pedals. This is what it would look like.
+![Two signal paths through three effects](https://github.com/sbest33/Sam-Best/blob/master/Week%2010/fxselex4%20copy.gif)
+
+Now we have two *"programs"*, each being controlled through a 4PST (Quadruple Pole Single Throw) switch which would, one marked P1 and the other P2. When P1 is closed (turned On), signal can run to all four of the SP4T switches in *"program" 1*, and when P2 is closed, signal can run to all four of the SP4T switches in *"program" 2*. Basically what we have now are two circuits the same as in the first image, running in parallel, each with their own pedal configuration. So let's we could set Program 1, to have the following signal flow: **Guitar In -> FX2 -> FX3 -> FX1 -> Output**; and Program 2 could have this signal flow: **Guitar In -> FX3 -> Output**.
