@@ -52,4 +52,220 @@ So at this point I knew that the analog version would maybe not be flawless enou
 
 So these two elements, the Arduino and the Relay, which I had a basic understanding of, were the two fundamental parts in the Effect Switching System that Rick Graham (mentioned earlier) built. Therefore I thought it would be best to design my project based on his. His creation, just like I am planning mine to have, has 6 foot-switches 5 of them to be used to swap between *"programs"* and then one to swap between banks.
 
+### Writing/Testing the Code
 So the first thing he did was create a simpler version of his circuit where instead of controlling the current to flow/not flow to each pedal there would be an LED in place of each relay. (In the full build he ends up also using an LED to indicate which *"Program"* is turned On at a give time, and what pedal is turned On within each Program, and also to show what Bank is selected).
+
+This is the code he uses (this is an updated version of the code by Youtube user MassaM):
+```cpp
+/*
+
+  Author:
+  MassaM
+  March-2017
+
+  Project:
+  Arduino Uno - Guitar Pedals Looper
+  Has 2 swtichable Banks of each 6 Patches (Pre-Programmed as in Hard Coded)
+
+*/
+
+// constants won't change. They're used here to
+// set pin numbers:
+
+const int bankin1 = 1; //input for bank input
+
+const int button1 = 2; // button 1 input pin
+const int button2 = 3; // button 2 input pin
+const int button3 = 4; // button 3 input pin
+const int button4 = 5; // button 4 input pin
+
+const int loop1 = 6; //  loop 1 output pin
+const int loop2 = 7; //  loop 2 output pin
+const int loop3 = 8; //  loop 3 output pin
+const int loop4 = 9; //  loop 4 output pin
+const int loop5 = 10; // loop 5 output pin
+const int loop6 = 11; // loop 6 output pin
+
+const int bank1 = 12; // bank1 output pin
+const int bank2 = 13; // bank2 output pin
+
+
+// variables will change:
+int buttonState1 = 0; // variable for reading button1 status
+int buttonState2 = 0; // variable for reading button2 status
+int buttonState3 = 0; // variable for reading button3 status
+int buttonState4 = 0; // variable for reading button4 status  
+
+int bankread1 = 0;  // variable for reading Bank Select status
+int bank1State = 0;
+int bank2State = 0;
+
+long lastDebounce = 0;
+long debounceDelay = 100;
+
+void setup() {
+
+  // initialize the Loop pins as an outputs:
+  pinMode(loop1, OUTPUT);
+  pinMode(loop2, OUTPUT);
+  pinMode(loop3, OUTPUT);
+  pinMode(loop4, OUTPUT);
+  pinMode(loop5, OUTPUT);
+  pinMode(loop6, OUTPUT);
+  pinMode(bank1, OUTPUT);
+  pinMode(bank2, OUTPUT);
+
+  // initialize the button pins as an inputs:
+  pinMode(button1, INPUT);
+  pinMode(button2, INPUT);
+  pinMode(button3, INPUT);
+  pinMode(button4, INPUT);
+
+  pinMode(bankin1, INPUT);
+
+  digitalWrite(bank1, HIGH); // Default Bank1 selected on startup
+
+} // Setup end
+
+void loop() {
+
+/* BANK SELECTION TOGGLE */
+
+//one button bank switching with delay for debouncing
+
+  bankread1 = digitalRead(bankin1);
+  bank1State = digitalRead(bank1);
+
+  if ((bankread1 == HIGH) && (bank1State == LOW)){
+
+  //turn led8 on
+    digitalWrite(bank2, LOW);
+    delay(100);
+    digitalWrite(bank1, HIGH);
+    delay(100);
+
+  }else if((bankread1 == HIGH) && (bank1State == HIGH)){
+
+  //turn led7 on
+    digitalWrite(bank1, LOW);
+    delay(100);
+    digitalWrite(bank2, HIGH);
+    delay(100);
+
+  }
+
+
+  /* BANK 1 PATCHES SELECTION  */
+
+  // bank one programming PATCHES
+
+  // Bank 1 - Button 1 stuff
+  buttonState1 = digitalRead(button1);
+
+  if ((buttonState1 == HIGH) && (bank1State == HIGH)){
+  // turn LEDs on and off:
+    digitalWrite(loop1, HIGH);
+    digitalWrite(loop3, HIGH);
+    digitalWrite(loop5, HIGH);
+    digitalWrite(loop2, LOW);
+    digitalWrite(loop4, LOW);
+    digitalWrite(loop6, LOW);
+  }
+
+  // Bank 1 - Button 2 stuff
+  buttonState2 = digitalRead(button2);
+
+  // turn LEDs on and off:
+  if ((buttonState2 == HIGH) && (bank1State == HIGH)) {
+    digitalWrite(loop1, LOW);
+    digitalWrite(loop3, LOW);
+    digitalWrite(loop5, LOW);
+    digitalWrite(loop2, HIGH);
+    digitalWrite(loop4, HIGH);
+    digitalWrite(loop6, HIGH);
+  }
+
+  // Bank 1 - Button 3 stuff
+  buttonState3 = digitalRead(button3);
+
+  // turn LEDs on and off:
+  if ((buttonState3 == HIGH) && (bank1State == HIGH)) {
+    digitalWrite(loop1, HIGH);
+    digitalWrite(loop2, HIGH);
+    digitalWrite(loop3, LOW);
+    digitalWrite(loop4, LOW);
+    digitalWrite(loop5, HIGH);
+    digitalWrite(loop6, HIGH);
+  }
+
+  // Bank 1 - Button 4 stuff
+  buttonState4 = digitalRead(button4);
+
+  // turn LEDs on and off:
+  if ((buttonState4 == HIGH) && (bank1State == HIGH)) {
+    digitalWrite(loop1, LOW);
+    digitalWrite(loop2, HIGH);
+    digitalWrite(loop3, HIGH);
+    digitalWrite(loop4, LOW);
+    digitalWrite(loop5, LOW);
+    digitalWrite(loop6, LOW);
+  }
+
+  /* BANK 2 PATCHES SELECTION  */
+
+  //bank two programming PATCHES
+
+  // Bank 2 - Button 1 stuff
+  buttonState1 = digitalRead(button1);
+
+  // turn LEDs on and off:
+  if ((buttonState1 == HIGH) && (bank1State == LOW)){
+    digitalWrite(loop1, LOW);
+    digitalWrite(loop3, HIGH);
+    digitalWrite(loop5, HIGH);
+    digitalWrite(loop2, LOW);
+    digitalWrite(loop4, HIGH);
+    digitalWrite(loop6, LOW);
+  }
+
+  // Bank 2 - Button 2 stuff
+  buttonState2 = digitalRead(button2);
+
+  // turn LEDs on and off:
+  if ((buttonState2 == HIGH) && (bank1State == LOW)){
+    digitalWrite(loop1, HIGH);
+    digitalWrite(loop3, LOW);
+    digitalWrite(loop5, LOW);
+    digitalWrite(loop2, HIGH);
+    digitalWrite(loop4, HIGH);
+    digitalWrite(loop6, LOW);
+  }
+
+  // Bank 2 - Button 3 stuff
+  buttonState3 = digitalRead(button3);
+
+  // turn LEDs on and off:
+  if ((buttonState3 == HIGH) && (bank1State == LOW)) {
+    digitalWrite(loop1, HIGH);
+    digitalWrite(loop2, HIGH);
+    digitalWrite(loop3, HIGH);
+    digitalWrite(loop4, HIGH);
+    digitalWrite(loop5, HIGH);
+    digitalWrite(loop6, HIGH);
+  }
+
+  // Bank 2 - Button 4 stuff
+  buttonState4 = digitalRead(button4);
+
+  // turn LEDs on and off:
+  if ((buttonState4 == HIGH) && (bank1State == LOW)) {
+    digitalWrite(loop1, HIGH);
+    digitalWrite(loop2, LOW);
+    digitalWrite(loop3, HIGH);
+    digitalWrite(loop4, LOW);
+    digitalWrite(loop5, HIGH);
+    digitalWrite(loop6, LOW);
+  }
+
+} // LOOP end﻿
+```
