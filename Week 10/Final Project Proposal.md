@@ -55,7 +55,7 @@ So these two elements, the Arduino and the Relay, which I had a basic understand
 ### Writing/Testing the Code
 So the first thing he did was create a simpler version of his circuit where instead of controlling the current to flow/not flow to each pedal there would be an LED in place of each relay. (In the full build he ends up also using an LED to indicate which *"Program"* is turned On at a give time, and what pedal is turned On within each Program, and also to show what Bank is selected).
 
-This is the code he uses (this is an updated version of the code by Youtube user MassaM):
+This is the code he uses to test the code with LED's (this is an updated version of the code by *Youtube* user *MassaM SDC*, but it only has two Banks of *"programs"* and 6 Effect Pedals):
 ```cpp
 /*
 
@@ -268,4 +268,6 @@ void loop() {
   }
 
 } // LOOP end﻿
-```
+'''*
+
+So now that I have this code which is enough to demo the signal flow that will happen
