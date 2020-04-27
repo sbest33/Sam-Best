@@ -1,7 +1,7 @@
 # FourSquare Documentation
 
 ## How I started
-I started this project by taking a closer look at the code we had written last week, and I looked at the Square we had to make for class, and I saw that there are just 2 *sets* of characters when observed horizontally. The first one is: **"+ - - - - + - - - - +"** and the second one is **"|        |         |"**. And printing in python is very easy, all it takes is:
+I started this project by taking a closer look at the code we had written last week, and I looked at the Square we had to make for class, and I saw that there are just 2 *sets* of characters when observed horizontally. The first one is: **"+ - - - - + - - - - +"** and the second one is **"|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|"**. And printing in python is very easy, all it takes is:
 
     print("")
 
