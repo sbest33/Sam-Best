@@ -1,4 +1,4 @@
-sideLength = 6
+sideLength = 16
 
 #s = "+ " #this is always going to be the first character of the foursquare figure
            #and then the rest of the figure will be added to this string
