@@ -1,0 +1,416 @@
+const int buttonBankToggle = 22; //this is the button that is going to toggle the bank number up everytime it is pressed
+
+const int button1 = 23; //assigning the first Footswtich to pin 23
+const int button2 = 24; //assigning the second Footwsitch to pin 24
+const int button3 = 25; //assigning the third Footswitch to pin 25
+const int button4 = 26; //assigning the fourth Footswitch to pin 26
+const int buttonTuner = 27; //assigning the tuner Footswitch to pin 27
+
+const int Relay1 = 28; //assigning Relay for FX1 to pin 28
+const int Relay2 = 29; //assigning Relay for FX2 to pin 29
+const int Relay3 = 30; //assigning Relay for FX3 to pin 30
+const int Relay4 = 31; //assigning Relay for FX4 to pin 31
+const int Relay5 = 32; //assigning Relay for FX5 to pin 32
+const int Relay6 = 33; //assigning Relay for FX6 to pin 33
+const int Relay7 = 34; //assigning Relay for FX7 to pin 34
+const int Relay8 = 35; //assigning Relay for the Tuner to pin 35
+
+const int FX1LED = 36; //assigning the status LED of FX1 to pin 36
+const int FX2LED = 37; //assigning the status LED of FX2 to pin 37
+const int FX3LED = 38; //assigning the status LED of FX3 to pin 38
+const int tunerLED = 39; //assigning the status LED of Tuner to pin 39
+
+const int program1LED = 44; //assigning the status LED of program 1 to pin 44
+const int program2LED = 45; //assigning the status LED of program 2 to pin 45
+const int program3LED = 46; //assignging the status LED of program 3 to pin 46
+const int program4LED = 47; //assigning the status LED of program 4 to pin 47
+const int buttonTunerLED = 48; //assinging the status LED of the Tuner program to pin 48
+
+const int LEDpinA = 8; //assigning pin A of 7 segment LED display to pin 8
+const int LEDpinB = 2; //assigning pin B of 7 segment LED display to pin 2
+const int LEDpinC = 3; //assigning pin C of 7 segment LED display to pin 3
+const int LEDpinD = 4; //assigning pin D of 7 segment LED display to pin 4
+const int LEDpinE = 5; //assigning pin E of 7 segment LED display to pin 5
+const int LEDpinF = 6; //assigning pin F of 7 segment LED display to pin 6
+const int LEDpinG = 7; //assigning pin G of 7 segment LED display to pin 7 
+
+//now declaring bindings that will change
+bool button1State;
+bool button2State;
+bool button3State;
+bool button4State;
+bool buttonTunerState;
+bool buttonBankState;
+
+int bankNumber = 1; //like this the pedal will  always start on the first bank when it is turned on
+int programNumber;
+
+//assigning bindings for each button so that there will not be any false button press readings
+unsigned long buttonBankLastDebounce = 0; //last time the bank toggle button was pressed
+unsigned long button1LastDebounce = 0; // last time button 1 was pressed
+unsigned long button2LastDebounce = 0; //last time button 2 was pressed
+unsigned long button3LastDebounce = 0; //last time button 3 was pressed
+unsigned long button4LastDebounce = 0; //last time button 4 was pressed
+unsigned long buttonTunerLastDebounce = 0; // last time the tuner button was pressed
+
+int bankDebounceDelay = 800; //just for the bank button
+int debounceDelay = 300; // setting the threshold of how long needs to pass before accepting another button press
+                         // this is done just to filter out button noise and avoid false readings
+
+class LEDpattern // making a function for the 7 segment LED that we can recall later with just one line of code
+  {
+       private:
+            bool statuspinA;
+            bool statuspinB;
+            bool statuspinC;
+            bool statuspinD;
+            bool statuspinE;
+            bool statuspinF;
+            bool statuspinG;
+     
+     public:
+     LEDpattern(bool pinA, bool pinB, bool pinC, bool pinD, bool pinE, bool pinF, bool pinG)
+          {
+            statuspinA = pinA;
+            statuspinB = pinB;
+            statuspinC = pinC;
+            statuspinD = pinD;
+            statuspinE = pinE;
+            statuspinF = pinF;
+            statuspinG = pinG;
+          }
+     void sevenSegment()
+          {
+            digitalWrite(LEDpinA, statuspinA);
+            digitalWrite(LEDpinB, statuspinB);
+            digitalWrite(LEDpinC, statuspinC);
+            digitalWrite(LEDpinD, statuspinD);
+            digitalWrite(LEDpinE, statuspinE);
+            digitalWrite(LEDpinF, statuspinF);
+            digitalWrite(LEDpinG, statuspinG);
+          }
+  };
+
+LEDpattern One(HIGH, LOW, LOW, HIGH, HIGH, HIGH, HIGH);
+LEDpattern Two(LOW, LOW, HIGH, LOW, LOW, HIGH, LOW);
+LEDpattern Three(LOW, LOW, LOW, LOW, HIGH, HIGH, LOW);
+LEDpattern Four(HIGH, LOW, LOW, HIGH, HIGH, LOW, LOW);
+LEDpattern Five(LOW, HIGH, LOW, LOW, HIGH, LOW, LOW);
+LEDpattern Six(LOW, HIGH, LOW, LOW, LOW, LOW, LOW);
+LEDpattern Seven(LOW, LOW, LOW, HIGH, HIGH, HIGH, HIGH);
+LEDpattern Eight(LOW, LOW, LOW, LOW, LOW, LOW, LOW);
+LEDpattern Nine(LOW, LOW, LOW, HIGH, HIGH, LOW, LOW);
+LEDpattern Zero(LOW, LOW, LOW, LOW, LOW, LOW, HIGH);
+
+class Program       //making a function that can then be recalled to turn on a configuration of Relays
+  {
+       private:
+            bool relayState1; //to choose if the pedal is turned on or off
+            bool relayState2; //these variables will each correspond to the digitalWrite status of each pedal
+            bool relayState3;
+            bool relayState4;
+            bool relayState5;
+            bool relayState6;
+            bool relayState7;
+            bool relayState8;
+            bool programState1;
+            bool programState2;
+            bool programState3;
+            bool programState4;
+            bool tunerState;
+  
+       public:
+       Program(bool relay1, bool relay2, bool relay3, bool relay4, bool relay5, bool relay6, bool relay7, bool relay8, bool ProgramState1, bool ProgramState2, bool ProgramState3, bool ProgramState4, bool TunerState)
+           {  
+             relayState1 = relay1; //these bindings are public so that their values can be altered from outside of the function
+             relayState2 = relay2; 
+             relayState3 = relay3;
+             relayState4 = relay4;
+             relayState5 = relay5;
+             relayState6 = relay6;
+             relayState7 = relay7;
+             relayState8 = relay8; 
+             programState1 = ProgramState1;
+             programState2 = ProgramState2;
+             programState3 = ProgramState3;
+             programState4 = ProgramState4;
+             tunerState = TunerState;
+
+       }
+
+       void Pedal()
+       {
+          digitalWrite(Relay1, relayState1);
+          digitalWrite(Relay2, relayState2);
+          digitalWrite(Relay3, relayState3);
+          digitalWrite(Relay4, relayState4);
+          digitalWrite(Relay5, relayState5);
+          digitalWrite(Relay6, relayState6);
+          digitalWrite(Relay7, relayState7);
+          digitalWrite(Relay8, relayState8);
+
+          
+          digitalWrite(FX1LED, !relayState1);
+          digitalWrite(FX2LED, !relayState3);
+          digitalWrite(FX3LED, !relayState5);
+          digitalWrite(tunerLED, !relayState7);
+          digitalWrite(program1LED, programState1);
+          digitalWrite(program2LED, programState2);
+          digitalWrite(program3LED, programState3);
+          digitalWrite(program4LED, programState4);
+          digitalWrite(buttonTunerLED, tunerState);
+       }
+  };
+
+Program bank1Program1(HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW, LOW, LOW, LOW); //here I am actually making the pedal configurations for each program
+Program bank1Program2(LOW, LOW, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW, HIGH, LOW, LOW, LOW); //and each program configuration is dependent on the current 
+Program bank1Program3(HIGH, HIGH, LOW, LOW, HIGH, HIGH, HIGH, HIGH, LOW, LOW, HIGH, LOW, LOW);  //bank that is selected
+Program bank1Program4(LOW, LOW, LOW, LOW, HIGH, HIGH, HIGH, HIGH, LOW, LOW, LOW, HIGH, LOW);
+
+Program bank2Program1(LOW, LOW, LOW, LOW, HIGH, HIGH, HIGH, HIGH, HIGH, LOW, LOW, LOW, LOW);
+Program bank2Program2(LOW, LOW, LOW, LOW, HIGH, HIGH, HIGH, HIGH, LOW, HIGH, LOW, LOW, LOW);
+Program bank2Program3(LOW, LOW, HIGH, HIGH, LOW, LOW, HIGH, HIGH, LOW, LOW, HIGH, LOW, LOW);
+Program bank2Program4(LOW, LOW, HIGH, HIGH, LOW, LOW, LOW, LOW, LOW, LOW, LOW, HIGH, LOW);
+
+Program bank3Program1(HIGH, HIGH, LOW, LOW, LOW, LOW, HIGH, HIGH, HIGH, LOW, LOW, LOW, LOW);
+Program bank3Program2(LOW, LOW, LOW, LOW, LOW, LOW, HIGH, HIGH, LOW, HIGH, LOW, LOW, LOW);
+Program bank3Program3(HIGH, HIGH, LOW, LOW, HIGH, HIGH, HIGH, HIGH, LOW, LOW, HIGH, LOW, LOW);
+Program bank3Program4(LOW, LOW, HIGH, HIGH, LOW, LOW, HIGH, HIGH, LOW, LOW, LOW, HIGH, LOW);
+
+Program bank4Program1(LOW, LOW, LOW, LOW, HIGH, HIGH, HIGH, HIGH, HIGH, LOW, LOW, LOW, LOW);
+Program bank4Program2(HIGH, HIGH, LOW, LOW, HIGH, HIGH, HIGH, HIGH, LOW, HIGH, LOW, LOW, LOW);
+Program bank4Program3(HIGH, HIGH, HIGH, HIGH, LOW, LOW, HIGH, HIGH, LOW, LOW, HIGH, LOW, LOW);
+Program bank4Program4(LOW, LOW, HIGH, HIGH, HIGH, HIGH, LOW, HIGH, LOW, LOW, LOW, HIGH, LOW);
+
+Program bank5Program1(LOW, LOW, HIGH, HIGH, LOW, LOW, HIGH, HIGH, HIGH, LOW, LOW, LOW, LOW);
+Program bank5Program2(LOW, LOW, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW, HIGH, LOW, LOW, LOW);
+Program bank5Program3(HIGH, HIGH, LOW, LOW, LOW, LOW, HIGH, HIGH, LOW, LOW, HIGH, LOW, LOW);
+Program bank5Program4(LOW, LOW, LOW, LOW, LOW, LOW, HIGH, HIGH, LOW, LOW, LOW, HIGH, LOW);
+
+Program tunerProgram(HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW, LOW, LOW, LOW, LOW, LOW, HIGH); 
+
+void setup() //the code that runs once at reset or power On. Parentheses are empty because there is no return value
+{
+
+  Serial.begin(9600); 
+  
+  pinMode(buttonBankToggle, INPUT);
+  pinMode(button1, INPUT);
+  pinMode(button2, INPUT);
+  pinMode(button3, INPUT);
+  pinMode(button4, INPUT);
+  pinMode(buttonTuner, INPUT);
+
+  pinMode(Relay1, OUTPUT);
+  pinMode(Relay2, OUTPUT);
+  pinMode(Relay3, OUTPUT);
+  pinMode(Relay4, OUTPUT);
+  pinMode(Relay5, OUTPUT);
+  pinMode(Relay6, OUTPUT);
+  pinMode(Relay7, OUTPUT);
+  pinMode(Relay8, OUTPUT);
+
+  pinMode(FX1LED, OUTPUT);
+  pinMode(FX2LED, OUTPUT);
+  pinMode(FX3LED, OUTPUT);
+  pinMode(tunerLED, OUTPUT);
+
+  pinMode(program1LED, OUTPUT);
+  pinMode(program2LED, OUTPUT);
+  pinMode(program3LED, OUTPUT);
+  pinMode(program4LED, OUTPUT);
+  pinMode(buttonTunerLED, OUTPUT);
+
+  pinMode(LEDpinA, OUTPUT);
+  pinMode(LEDpinB, OUTPUT);
+  pinMode(LEDpinC, OUTPUT);
+  pinMode(LEDpinD, OUTPUT);
+  pinMode(LEDpinE, OUTPUT);
+  pinMode(LEDpinF, OUTPUT);
+  pinMode(LEDpinG, OUTPUT);
+  //all the above code inside of void setup() was just declaring which pins were inputs and which were outputs
+  bank1Program1.Pedal();
+}
+
+void loop() //the code that runs forever. Parentheses are empty because there is no return value
+{
+
+  unsigned long currentTime = millis(); //this will start a timer in milliseconds, called currentTime
+
+  //Serial.print(lastButtonBankState);
+
+  //when the device is first turned on, the bank is set to 1, so it will display that with the 7 segment LED display
+  //if (currentTime < 5){
+  //One.sevenSegment();
+  //}
+
+  buttonBankState = digitalRead(buttonBankToggle); //the states of each button need to be stored by reading the status of our bank toggle footswitch
+  button1State = digitalRead(button1); 
+  button2State = digitalRead(button2);
+  button3State = digitalRead(button3);
+  button4State = digitalRead(button4);
+  buttonTunerState = digitalRead(buttonTuner);
+
+  //Serial.print(buttonBankState);
+  if ((buttonBankState == HIGH) && ((currentTime - buttonBankLastDebounce) > bankDebounceDelay)) { 
+  /* this is checking if there is a change of state in the Bank toggle button, and the time since that has last happened 
+  is more than debounceDelay. If it is, than the bank number will move up (unless it is already at 5, and if that is the case 
+  it will reset to 1), and the last time the bank toggle footswitch was pressed will be updated */
+     buttonBankLastDebounce = currentTime; //this is to keep track of the last time the Bank toggle footswitch was pressed
+        Serial.println(bankNumber);
+     programNumber = 1;
+     if (bankNumber < 5) {           
+        bankNumber++; 
+        Serial.println(bankNumber);
+        }
+     else {
+     bankNumber = 1;
+     Serial.println(bankNumber);
+     }
+   }
+  
+   if (bankNumber == 1) {              
+      One.sevenSegment();             //7 segment LED display configuration for bank 1
+
+      if ((button1State == HIGH) && ((currentTime - button1LastDebounce) > debounceDelay)) {
+        programNumber = 1;
+        bank1Program1.Pedal();
+      }
+
+      else if ((button2State == HIGH) && ((currentTime - button2LastDebounce) > debounceDelay)) {
+        programNumber = 2;
+        bank1Program2.Pedal();
+
+      }
+
+      else if ((button3State == HIGH) && ((currentTime - button3LastDebounce) > debounceDelay)) {
+        programNumber = 3;
+        bank1Program3.Pedal();
+
+      }
+
+      else if ((button4State == HIGH) && ((currentTime - button4LastDebounce) > debounceDelay)) {
+        programNumber = 4;
+        bank1Program4.Pedal();
+      }
+      
+      else if ((buttonTunerState == HIGH) && ((currentTime - buttonTunerLastDebounce) > debounceDelay)) {
+        programNumber = 5;
+        tunerProgram.Pedal();
+      }
+   }
+   
+   else if (bankNumber == 2) {              
+      Two.sevenSegment();             //7 segment LED display configuration for bank 2
+
+      if ((button1State == HIGH) && ((currentTime - button1LastDebounce) > debounceDelay)) {
+        programNumber = 1;
+        bank2Program1.Pedal();
+      }
+
+      else if ((button2State == HIGH) && ((currentTime - button2LastDebounce) > debounceDelay)) {
+        programNumber = 2;
+        bank2Program2.Pedal();
+      }
+
+      else if ((button3State == HIGH) && ((currentTime - button3LastDebounce) > debounceDelay)) {
+        programNumber = 3;
+        bank2Program3.Pedal();
+      }
+
+      else if ((button4State == HIGH) && ((currentTime - button4LastDebounce) > debounceDelay)) {
+        programNumber = 4;
+        bank2Program4.Pedal();
+      }
+      else if ((buttonTunerState == HIGH) && ((currentTime - buttonTunerLastDebounce) > debounceDelay)) {
+        programNumber = 5;
+        tunerProgram.Pedal();
+      }
+   }
+
+   else if (bankNumber == 3) {         
+      Three.sevenSegment();           //7 segment LED display configuration for bank 3
+
+      if ((button1State == HIGH) && ((currentTime - button1LastDebounce) > debounceDelay)) {
+        programNumber = 1;
+        bank3Program1.Pedal();
+      }
+
+      else if ((button2State == HIGH) && ((currentTime - button2LastDebounce) > debounceDelay)) {
+        programNumber = 2;
+        bank3Program2.Pedal();
+      }
+
+      else if ((button3State == HIGH) && ((currentTime - button3LastDebounce) > debounceDelay)) {
+        programNumber = 3;
+        bank3Program3.Pedal();
+      }
+
+      else if ((button4State == HIGH) && ((currentTime - button4LastDebounce) > debounceDelay)) {
+        programNumber = 4;
+        bank3Program4.Pedal();
+      }
+      else if ((buttonTunerState == HIGH) && ((currentTime - buttonTunerLastDebounce) > debounceDelay)) {
+        programNumber = 5;
+        tunerProgram.Pedal();
+      }
+   }
+   
+
+   else if (bankNumber == 4) {         
+      Four.sevenSegment();          //7 segment LED display configuration for bank 4
+
+      if ((button1State == HIGH) && ((currentTime - button1LastDebounce) > debounceDelay)) {
+        programNumber = 1;
+        bank4Program1.Pedal();
+      }
+
+      else if ((button2State == HIGH) && ((currentTime - button2LastDebounce) > debounceDelay)) {
+        programNumber = 2;
+        bank4Program2.Pedal();
+      }
+
+      else if ((button3State == HIGH) && ((currentTime - button3LastDebounce) > debounceDelay)) {
+        programNumber = 3;
+        bank4Program3.Pedal();
+      }
+
+      else if ((button4State == HIGH) && ((currentTime - button4LastDebounce) > debounceDelay)) {
+        programNumber = 4;
+        bank4Program4.Pedal();
+      }
+      else if ((buttonTunerState == HIGH) && ((currentTime - buttonTunerLastDebounce) > debounceDelay)) {
+        programNumber = 5;
+        tunerProgram.Pedal();
+      }
+   }
+
+   else if (bankNumber = 5) {         
+      Five.sevenSegment();          //7 segment LED display configuration for bank 5
+   
+      if ((button1State == HIGH) && ((currentTime - button1LastDebounce) > debounceDelay)) {
+        programNumber = 1;
+        bank5Program1.Pedal();
+      }
+
+      else if ((button2State == HIGH) && ((currentTime - button2LastDebounce) > debounceDelay)) {
+        programNumber = 2;
+        bank5Program2.Pedal();
+      }
+
+      else if ((button3State == HIGH) && ((currentTime - button3LastDebounce) > debounceDelay)) {
+        programNumber = 3;
+        bank5Program3.Pedal();
+      }
+
+      else if ((button4State == HIGH) && ((currentTime - button4LastDebounce) > debounceDelay)) {
+        programNumber = 4;
+        bank5Program4.Pedal();
+      }
+      else if ((buttonTunerState == HIGH) && ((currentTime - buttonTunerLastDebounce) > debounceDelay)) {
+        programNumber = 5;
+        tunerProgram.Pedal();
+      }
+   }
+   
+}
